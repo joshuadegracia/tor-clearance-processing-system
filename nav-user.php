@@ -1,6 +1,6 @@
 <nav class="navbar navbar-inverse navbar-static-top">
     <div class="navbar-header">
-        <a class="navbar-left"><img src="./img/logo.png" style="width: 50px; height: 40px; margin-top: 5px; margin-left: -15px; margin-right: -15px"></a>
+        <a class="navbar-left"><img src="<?php echo site_url('img/logo.jpg'); ?>" style="width: 50px; height: 40px; margin-top: 5px; margin-left: -15px; margin-right: -15px"></a>
         <a class="navbar-brand" href="<?php echo site_url('home.php?sid=' . session_id()); ?>" style="color: white">&nbsp; SPCF Online TOR Request System</a>
     </div>
 

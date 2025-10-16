@@ -249,6 +249,50 @@ while ($rows = mysqli_fetch_array($row)) {
 			}
 		}
 
+		// Handle student update before displaying the list
+		if (isset($_POST['hidden_saave'])) {
+			$sid = mysqli_real_escape_string($con, $_POST['sid']);
+			$last = strtoupper(mysqli_real_escape_string($con, $_POST['last']));
+			$first = strtoupper(mysqli_real_escape_string($con, $_POST['first']));
+			$mid = strtoupper(mysqli_real_escape_string($con, $_POST['mid']));
+			$corss = mysqli_real_escape_string($con, $_POST['corss']);
+			@$original_stid = mysqli_real_escape_string($con, $_POST['original_stid']); // Assuming we add this hidden field
+
+			// Check if required fields are not empty
+			if (empty($sid) || empty($last) || empty($first) || empty($corss)) {
+				echo "<script>alert('Please fill in all required fields.');</script>";
+			} else {
+				// Check for duplicate student_ID if changed
+				if ($sid != $original_stid) {
+					$check_query = "SELECT * FROM student_list WHERE student_ID = '$sid' AND visibility = '1'";
+					$check_result = mysqli_query($con, $check_query);
+					if (mysqli_num_rows($check_result) > 0) {
+						echo "<script>alert('Student ID already exists.');</script>";
+					} else {
+						// Proceed with update
+						$sql_student_list = "UPDATE student_list SET student_ID='$sid', lastname='$last', firstname='$first', middlename='$mid', course='$corss' WHERE student_ID='$original_stid'";
+						$res_student_list = mysqli_query($con, $sql_student_list);
+						if ($res_student_list) {
+							@header("location: masterhome.php?list");
+							exit;
+						} else {
+							echo "<script>alert('Error updating student information.');</script>";
+						}
+					}
+				} else {
+					// No change in student_ID, just update other fields
+					$sql_student_list = "UPDATE student_list SET lastname='$last', firstname='$first', middlename='$mid', course='$corss' WHERE student_ID='$original_stid'";
+					$res_student_list = mysqli_query($con, $sql_student_list);
+					if ($res_student_list) {
+						@header("location: masterhome.php?list");
+						exit;
+					} else {
+						echo "<script>alert('Error updating student information.');</script>";
+					}
+				}
+			}
+		}
+
 		$sql4 = "SELECT * FROM student_list WHERE visibility = '1'";
 		$qry4 = mysqli_query($con, $sql4);
 		while ($row4 = mysqli_fetch_array($qry4)) {
@@ -259,26 +303,7 @@ while ($rows = mysqli_fetch_array($row)) {
 			$cor =  $row4['course'];
 
 			$fullname = $ln . ", " . $fn . " " . $mn;
-
-	?>
-
-			<?php
-			if (isset($_POST['saave'])) {
-				$sid = $_POST['sid'];
-				$last = strtoupper($_POST['last']);
-				$first = strtoupper($_POST['first']);
-				$mid = strtoupper($_POST['mid']);
-				$corss = $_POST['corss'];
-
-
-				$res = mysqli_query(
-					$con,
-					"UPDATE student_list SET student_ID='$sid', lastname='$last', firstname='$first', middlename='$mid', course='$corss' WHERE student_ID=$stid"
-				);
-				header("location: masterhome.php?list");
-			}
-			?>
-
+?>
 			<center>
 				<table>
 					<tr>
@@ -350,6 +375,8 @@ while ($rows = mysqli_fetch_array($row)) {
 
 
 														<input type="submit" name="saave" value="Save">
+														<input type="hidden" name="hidden_saave" value="TRUE">
+														<input type="hidden" name="original_stid" value="<?php echo $row4['student_ID']; ?>">
 													</form>
 												</div>
 											</div>

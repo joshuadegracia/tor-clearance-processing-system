@@ -77,8 +77,8 @@ if (isset($_POST['regbtn'])) {
 	<div class="container-fluid">
 		<nav class="navbar navbar-inverse navbar-static-top">
 			<div class="navbar-header">
-				<a class="navbar-left"><img src="./img/logo.png" style="width: 50px; height: 40px; margin-top: 5px; margin-left: -15px; margin-right: -15px"></a>
-				<a class="navbar-brand" href="#" style="color: white">MVGFC Online TOR Request System</a>
+				<a class="navbar-left"><img src="<?php echo site_url('img/logo.jpg'); ?>" style="width: 50px; height: 40px; margin-top: 5px; margin-left: -15px; margin-right: -15px"></a>
+				<a class="navbar-brand" href="#" style="color: white">&nbsp; SPCF Online TOR Request System</a>
 			</div>
 
 			<ul class="nav navbar-nav navbar-right">
@@ -123,11 +123,12 @@ if (isset($_POST['regbtn'])) {
 
 						</div>
 						<div class="col-sm-5 col-sm-offset-1">
-							<form method="post" action="" style="width: 90%">
-								<label style="color: #4B4B4B; font-size: 20pt; margin-top: 20px; margin-left: -40% ">Educational Info</label>
-								<div class="input-group">
-									<label>Course</label>
-									<select name="cors" required>
+							<form method="post" action="" style="width:90%; max-width:600px; margin:auto;">
+								<h3 style="color:#4B4B4B; font-size:20pt; margin-top:20px;">Educational Info</h3>
+
+								<div class="form-group">
+									<label for="courseSelect">Course</label>
+									<select class="form-control" id="courseSelect" name="cors" required>
 										<option value="BSN">Bachelor of Science in Nursing</option>
 										<option value="BSIT">Bachelor of Science in Information Technology</option>
 										<option value="BSC">Bachelor of Science in Criminology</option>
@@ -135,28 +136,38 @@ if (isset($_POST['regbtn'])) {
 										<option value="BSA">Bachelor of Science in Accountancy</option>
 									</select>
 								</div>
-								<div class="input-group">
-									<label>Status</label>
-									<label style="font-size: 10pt">Graduate</label><input type="radio" name="stat" value="Graduate" style="height: 15px; margin-left: -12px">
-									<label style="font-size: 10pt">Undergraduate</label><input type="radio" name="stat" value="Undergraduate" style="height: 15px; margin-left: -12px">
-								</div>
-								<div class="input-group">
-									<label>Year Graduated / Last Attended</label>
-									<input type="number" name="year" min="1965" max="2018" value="2018">
-								</div>
-								<label style="color: #4B4B4B; font-size: 20pt; margin-top: 20px; margin-left: -50% ">Account Info</label>
-								<div class="input-group">
-									<label>Password</label>
-									<input type="password" name="pass" required>
-								</div>
-								<div class="input-group">
-									<label>Confirm Password</label>
-									<input type="password" name="pass2" required>
+
+								<div class="form-group">
+									<label for="statusSelect">Status</label>
+									<select class="form-control" id="statusSelect" name="stat" required>
+										<option value="Graduate">Graduate</option>
+										<option value="Undergraduate">Undergraduate</option>
+									</select>
 								</div>
 
-								<div class="input-group">
-									<button style="background-color: #158A43; color: bisque; margin-top: 10%; margin-left: 10%" type="submit" class="btn" name="regbtn">Register</button>
+								<div class="form-group">
+									<label for="yearInput">Year Graduated / Last Attended</label>
+									<input type="number" class="form-control" id="yearInput" name="year" min="1965" max="2018" value="2018" required>
 								</div>
+
+								<h3 style="color:#4B4B4B; font-size:20pt; margin-top:20px;">Account Info</h3>
+
+								<div class="form-group">
+									<label for="password">Password</label>
+									<input type="password" class="form-control" id="password" name="pass" required>
+								</div>
+
+								<div class="form-group">
+									<label for="confirmPassword">Confirm Password</label>
+									<input type="password" class="form-control" id="confirmPassword" name="pass2" required>
+								</div>
+
+								<div class="form-group text-center">
+									<button type="submit" class="btn btn-success" name="regbtn" style="margin-top:20px;">
+										Register
+									</button>
+								</div>
+							</form>
 						</div>
 						<div class="error_msg">
 							<?php

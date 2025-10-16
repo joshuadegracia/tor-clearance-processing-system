@@ -1,4 +1,28 @@
-<?php include 'config.php'; ?>
+<?php
+
+include 'config.php';
+$con = get_db_connection();
+
+if (isset($_POST['login'])) {
+	$sid = $_POST['id'];
+	$pass = $_POST['password'];
+	$pass = md5($pass);
+
+	$sql = "SELECT * FROM `accounts` WHERE student_ID = '".$sid."' AND `password` = '".$pass."' AND `type` = 'user' ";
+	$qry = mysqli_query($con, $sql);
+	$row  = mysqli_fetch_array($qry);
+
+	if ($row['student_ID'] == $sid && $row['password'] == $pass) {
+		session_start();
+		$_SESSION['user'] = $sid;
+		$_SESSION['pass'] = $pass;
+		header("location: home.php?redirect=user&sid" . session_id());
+	} else {
+		header("location:login.php?loginfailed");
+	}
+}
+
+?>
 <!DOCTYPE html>
 <html>
 
@@ -35,51 +59,38 @@
 		<h2 style="color: white">Login</h2>
 	</div>
 	<div>
-		<form method="post" action="login.php">
-			<div class="input-group">
-				<label>Student ID</label>
-				<input type="text" name="id">
+		<form method="post" action="login.php?sid=<?php echo session_id(); ?>">
+			<div class="form-group">
+				<label for="studentID">Student ID</label>
+				<input type="text" class="form-control" id="studentID" name="id" placeholder="Enter your student ID" required>
 			</div>
-			<div class="input-group">
-				<label>Password</label>
-				<input type="password" name="password">
+
+			<div class="form-group">
+				<label for="studentPassword">Password</label>
+				<input type="password" class="form-control" id="studentPassword" name="password" placeholder="Enter your password" required>
 			</div>
-			<div class="input-group">
-				<button style="color: white" type="submit" class="btn" name="login">Login</button>
+
+			<div class="form-group text-center">
+				<button type="submit" class="btn btn-success btn-block" name="login">
+					Login
+				</button>
 			</div>
-			<a href="adminlogin.php">as admin?</a>
-			<div class="error_msg">
+
+			<div class="text-center">
+				<a href="adminlogin.php" class="text-muted">Login as admin?</a>
+			</div>
+
+			<div class="error_msg text-center text-danger" style="margin-top:15px;">
 				<?php
 				if (isset($_GET['loginfailed'])) {
-					die("The Username or Password you entered is incorrect!");
+					echo "The Username or Password you entered is incorrect!";
 				}
 				if (isset($_GET['authenticationrequired'])) {
-					die("You must login first!");
+					echo "You must login first!";
 				}
 				?>
 			</div>
 		</form>
-		<?php
-		$con = get_db_connection();
-
-		if (isset($_POST['login'])) {
-			$sid = $_POST['id'];
-			$pass = $_POST['password'];
-			$pass = md5($pass);
-
-			$qry = mysqli_query($con, "SELECT * FROM accounts WHERE student_ID = '$sid' AND password = '$pass' AND type='user'");
-			$row  = mysqli_fetch_array($qry);
-
-			if ($row['student_ID'] == $sid && $row['password'] == $pass) {
-				session_start();
-				$_SESSION['user'] = $sid;
-				$_SESSION['pass'] = $pass;
-				header("location: home.php");
-			} else {
-				header("location:login.php?loginfailed");
-			}
-		}
-		?>
 	</div>
 
 </body>

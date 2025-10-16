@@ -1,4 +1,7 @@
-<?php include 'config.php'; ?>
+<?php
+  session_start();
+  include 'config.php';
+?>
 <!DOCTYPE html>
 <html>
 
@@ -105,7 +108,7 @@
     <nav class="navbar navbar-inverse navbar-static-top">
       <div class="navbar-header">
         <a class="navbar-left"><img src="<?php echo site_url('img/logo.jpg'); ?>" style="width: 50px; height: 40px; margin-top: 5px; margin-left: -15px; margin-right: -15px"></a>
-        <a class="navbar-brand" href="#" style="color: white">&nbsp; SPCF Online TOR Request System</a>
+        <a class="navbar-brand" href="<?php echo $_SERVER['PHP_SELF']; ?>?sid=<?php echo session_id(); ?>" style="color: white">&nbsp; SPCF Online TOR Request System</a>
       </div>
 
       <ul class="nav navbar-nav navbar-right">
@@ -169,7 +172,7 @@
       <h2 style="font-weight: bold;">SPCF Mission</h2>
       <p style="font-size: 12pt; padding: 10px">To produce educationally, vocationally and technologically trained graduates who will be economically productive, self-sufficient, responsible and disciplined citizens of the Philippines.</p>
       <div>
-        <p style="text-align: center; font-size: 13pt"><span class="fas fa-envelope"></span> SPCFinc@gmail.com | : <span class="fab fa-facebook-f"></span> https://www.facebook.com/spcfpaniqui</p>
+        <p style="text-align: center; font-size: 13pt"><span class="glyphicon glyphicon-envelope"></span> SPCFinc@gmail.com | : <span class="glyphicon glyphicon-thumbs-up"></span> https://www.facebook.com/spcfpaniqui</p>
       </div>
     </div>
   </div>

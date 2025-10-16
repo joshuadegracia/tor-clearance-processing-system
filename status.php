@@ -12,11 +12,28 @@ if (!isset($user) && !isset($pass)) {
     header("location:login.php?authenticationrequired");
 }
 
-$row = mysqli_query(
-    $con,
-    "SELECT * FROM requester WHERE student_ID='$user'"
-);
-while ($rows = mysqli_fetch_array($row)) {
+$row = mysqli_query($con, "SELECT * FROM `requester` WHERE student_ID= '" . $user . "' ");
+while ($rows = mysqli_fetch_array($row, MYSQLI_ASSOC)) {
+
+    //print_r($rows);
+
+    /*
+        Array ( 
+                [info_ID] => 1 
+                [date] => 2025-10-16 15:59:19 
+                [student_lastname] => DE GRACIA 
+                [student_firstname] => JOSHUA 
+                [student_middlename] => WENCESLAO 
+                [birthday] => 1990-04-10 
+                [contactNo] => 09186484491 
+                [student_course] => BSIT 
+                [status] => Undergraduate 
+                [year_graduated_lastAttended] => 2010 
+                [student_visibility] => 1 
+                [student_ID] => 2015102107
+            )
+    */
+
     $rdate = $rows['date'];
     $id = $rows['student_ID'];
     $last = $rows['student_lastname'];
@@ -26,6 +43,7 @@ while ($rows = mysqli_fetch_array($row)) {
     $num = $rows['contactNo'];
     $full = $last . ", " . $name . " " . $mid;
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -76,85 +94,56 @@ while ($rows = mysqli_fetch_array($row)) {
 
     <center>
         <table>
-            <caption style="margin-top: 20px">Clearance Status</caption>
-            <tr>
-                <div class='input-group'>
-                    <th style='text-align: center'>
-                        <label style='font-size: 25pt; color:tomato'>Department</label>
-                    </th>
-                </div>
-            </tr>
+            <caption style="margin-top: 20px;">Clearance Status</caption>
+
         </table>
-        <table border="solid">
+        <table border="solid" class="table-hover">
+            <thead style="font-size: 19px;">
+                <tr>
+                    <th>Department</th>
+                    <th>Status</th>
+                    <th>Personnel</th>
+                </tr>
+            </thead>
             <tbody>
                 <tr>
                     <td style='text-align: center'>
                         <label style='font-size: 12pt; color: blue'>Program Chair Department</label>
                     </td>
 
-
-                    <td style='text-align: center'>
-                        <label style='font-size: 12pt; color: blue'>Library</label>
-                    </td>
-
-
-                    <td style='text-align: center'>
-                        <label style='font-size: 12pt; color: blue'>SPS/Guidance</label>
-                    </td>
-
-
-                    <td style='text-align: center'>
-                        <label style='font-size: 12pt; color: blue'>Finance</label>
-                    </td>
-
-
-                </tr>
-            </tbody>
-        </table>
-
-
-        <table border="solid">
-            <tbody>
-                <td style='text-align: center'>
-
                     <?php
                     $row9 = mysqli_query($con, "SELECT * FROM `department` WHERE department_name='Program Chair Department' ");
-                    while ($rows9 = mysqli_fetch_array($row9)) {
+                    while ($rows9 = mysqli_fetch_array($row9, MYSQLI_ASSOC)) {
 
                         $did = $rows9['departmentID'];
 
-                        // $row11 = mysqli_query($con, "SELECT * FROM `blacklist` WHERE student_ID='$id' AND departmentID='$did'");
-                        // $rows11 = mysqli_fetch_array($row11, MYSQLI_ASSOC);
-
                         $row10 = mysqli_query($con, "SELECT * FROM `clearance` WHERE student_ID='$id' AND departmentID='$did'");
-                        while ($rows10 = mysqli_fetch_array($row10)) {
+                        while ($rows10 = mysqli_fetch_array($row10, MYSQLI_ASSOC)) {
+
                             if ($rows10['clearance_status'] == "Clear") {
-                                echo "<span class='glyphicon glyphicon-ok' style= 'font-size: 20pt; padding: 10px; color: limegreen'>";
-                                echo "</span>";
+                                echo "<td style='text-align: center'>";
+                                echo "<span class='glyphicon glyphicon-ok' style='font-size: 20pt; padding: 10px; color: limegreen'></span>";
+                                echo "</td>";
+                                echo "<td>" . get_admin_info($rows10['admin_ID']) . "</td>";
                             }
                             if ($rows10['clearance_status'] == "Not Clear") {
-                                echo "<span class='glyphicon glyphicon-remove' style= 'font-size: 20pt; padding: 10px; color: tomato'>";
-                                echo "</span>";
+                                echo "<td>";
+                                echo "<span class='glyphicon glyphicon-remove' style='font-size: 20pt; padding: 10px; color: tomato'></span>";
+                                echo "</td>";
+                                // FIX: use $rows10 (the fetched row), not $row10 (the mysqli_result object)
+                                echo "<td>" . get_admin_info($rows10['admin_ID']) . "</td>";
                             }
                         }
-
-                        /*
-                        $row11 = mysqli_query($con, "SELECT * FROM `blacklist` WHERE student_ID='$id' AND departmentID='$did'");
-
-                        if ($row11 && mysqli_num_rows($row11) > 0) {
-                            while ($rows11 = mysqli_fetch_array($row11, MYSQLI_ASSOC)) {
-                                echo $rows11['remark']; // ✅ fixed: use $rows11, not $row11
-                            }
-                        } else {
-                            echo "";
-                        }
-                            */
                     }
                     ?>
 
-                </td>
 
-                <td style='text-align: center'>
+                    </td>
+                </tr>
+                <tr>
+                    <td style='text-align: center'>
+                        <label style='font-size: 12pt; color: blue'>Library</label>
+                    </td>
                     <?php
                     $row1 = mysqli_query(
                         $con,
@@ -165,23 +154,33 @@ while ($rows = mysqli_fetch_array($row)) {
 
                         $row3 = mysqli_query(
                             $con,
-                            "SELECT * FROM clearance WHERE student_ID='$id' AND departmentID='$did'"
+                            "SELECT * FROM `clearance` WHERE student_ID='$id' AND departmentID='$did'"
                         );
                         while ($rows3 = mysqli_fetch_array($row3)) {
                             if ($rows3['clearance_status'] == "Clear") {
+                                echo "<td>";
                                 echo "<span class='glyphicon glyphicon-ok' style= 'font-size: 20pt; padding: 10px; color: limegreen'>";
                                 echo "</span>";
+                                echo "</td>";
+                                echo "<td>" . get_admin_info($rows3['admin_ID']) . "</td>";
                             }
                             if ($rows3['clearance_status'] == "Not Clear") {
+                                echo "<td>";
                                 echo "<span class='glyphicon glyphicon-remove' style= 'font-size: 20pt; padding: 10px; color: tomato'>";
                                 echo "</span>";
+                                echo "</td>";
+                                echo "<td>" . get_admin_info($rows3['admin_ID']) . "</td>";
                             }
                         }
                     }
                     ?>
-                </td>
+                    </td>
+                </tr>
+                <tr>
+                    <td style='text-align: center'>
+                        <label style='font-size: 12pt; color: blue'>SPS/Guidance</label>
+                    </td>
 
-                <td style='text-align: center'>
                     <?php
                     $row4 = mysqli_query(
                         $con,
@@ -192,52 +191,60 @@ while ($rows = mysqli_fetch_array($row)) {
 
                         $row5 = mysqli_query(
                             $con,
-                            "SELECT * FROM clearance WHERE student_ID='$id' AND departmentID='$did'"
+                            "SELECT * FROM `clearance` WHERE student_ID='$id' AND departmentID='$did'"
                         );
                         while ($rows5 = mysqli_fetch_array($row5)) {
                             if ($rows5['clearance_status'] == "Clear") {
+                                echo "<td style='text-align:center'>";
                                 echo "<span class='glyphicon glyphicon-ok' style= 'font-size: 20pt; padding: 10px; color: limegreen'>";
                                 echo "</span>";
+                                echo "<td>" . get_admin_info($rows5['admin_ID']) . "</td>";
                             }
                             if ($rows5['clearance_status'] == "Not Clear") {
+                                echo "<td>";
                                 echo "<span class='glyphicon glyphicon-remove' style= 'font-size: 20pt; padding: 10px; color: tomato'>";
                                 echo "</span>";
+                                echo "</td>";
+                                echo "<td>" . get_admin_info($rows5['admin_ID']) . "</td>";
                             }
                         }
                     }
                     ?>
-                </td>
-
-                <td style='text-align: center'>
-                    <?php
-                    $row6 = mysqli_query(
-                        $con,
-                        "SELECT * FROM department WHERE department_name='Finance' "
-                    );
-                    while ($rows6 = mysqli_fetch_array($row6)) {
-                        $did = $rows6['departmentID'];
-
-                        $row7 = mysqli_query(
-                            $con,
-                            "SELECT * FROM clearance WHERE student_ID='$id' AND departmentID='$did'"
-                        );
-                        while ($rows7 = mysqli_fetch_array($row7)) {
-                            if ($rows7['clearance_status'] == "Clear") {
-                                echo "<span class='glyphicon glyphicon-ok' style= 'font-size: 20pt; padding: 10px; color: limegreen'>";
-                                echo "</span>";
-                            }
-                            if ($rows7['clearance_status'] == "Not Clear") {
-                                echo "<span class='glyphicon glyphicon-remove' style= 'font-size: 20pt; padding: 10px; color: tomato'>";
-                                echo "</span>";
-                            }
-                        }
-                    }
-                    ?>
-                </td>
-
-
                 </tr>
+                <tr>
+                    <td style='text-align: center'>
+                        <label style='font-size: 12pt; color: blue'>Finance</label>
+                    </td>
+                        <?php
+                        $row6 = mysqli_query(
+                            $con,
+                            "SELECT * FROM department WHERE department_name='Finance' "
+                        );
+                        while ($rows6 = mysqli_fetch_array($row6)) {
+                            $did = $rows6['departmentID'];
 
+                            $row7 = mysqli_query(
+                                $con,
+                                "SELECT * FROM clearance WHERE student_ID='$id' AND departmentID='$did'"
+                            );
+                            while ($rows7 = mysqli_fetch_array($row7)) {
+                                if ($rows7['clearance_status'] == "Clear") {
+                                    echo "<td>";
+                                    echo "<span class='glyphicon glyphicon-ok' style= 'font-size: 20pt; padding: 10px; color: limegreen'>";
+                                    echo "</span>";
+                                    echo "</td>";
+                                    echo "<td>" . get_admin_info($rows7['admin_ID']) . "</td>";
+                                }
+                                if ($rows7['clearance_status'] == "Not Clear") {
+                                    echo "<td>";
+                                    echo "<span class='glyphicon glyphicon-remove' style= 'font-size: 20pt; padding: 10px; color: tomato'>";
+                                    echo "</span>";
+                                    echo "<td>" . get_admin_info($rows7['admin_ID']) . "</td>";
+                                }
+                            }
+                        }
+                        ?>
+                </tr>
             </tbody>
         </table>
     </center>

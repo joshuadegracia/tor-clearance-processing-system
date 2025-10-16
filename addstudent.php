@@ -20,13 +20,35 @@ while ($rows = mysqli_fetch_array($row)) {
 	$name = $rows['admin_firstname'];
 	$mtr = $rows['admin_ID'];
 }
-?>
-<?php
+
 if (isset($_GET['out'])) {
 	session_unset();
 	session_destroy();
 
 	header("location: adminlogin.php");
+}
+
+if (isset($_POST['addbtn'])) {
+	$sid = $_POST['id'];
+	$ln = strtoupper($_POST['ln']);
+	$fn = strtoupper($_POST['fn']);
+	$mn = strtoupper($_POST['mn']);
+	$cors = $_POST['cors'];
+
+
+	$query = "SELECT * FROM `student_list` WHERE student_ID = '$sid'";
+
+	$result1 = mysqli_query($con, $query) or die(mysqli_error($con));
+
+	if (mysqli_num_rows($result1) > 0) {
+		header("location: addstudent.php?addfailed");
+	} else {
+
+		$sql = "INSERT INTO `student_list` (student_ID, lastname, firstname, middlename, course, visibility)
+				VALUES ('$sid', '$ln', '$fn', '$mn', '$cors', '1')";
+		$qry = mysqli_query($con, $sql);
+		header("location: masterhome.php?list");
+	}
 }
 ?>
 
@@ -42,7 +64,8 @@ if (isset($_GET['out'])) {
 	<link rel="stylesheet" href="<?php echo site_url('css/bootstrap.min.css'); ?>">
 	<script src="<?php echo site_url('js/jquery.min.js'); ?>"></script>
 	<script src="<?php echo site_url('js/bootstrap.min.js'); ?>"></script>
-
+	<!-- Favicon -->
+	<link href="<?php echo site_url('img/logo.jpg'); ?>" rel="shortcut icon" type="image/vnd.microsoft.icon" />
 </head>
 
 <body>
@@ -54,26 +77,30 @@ if (isset($_GET['out'])) {
 		<h2>Add To Student List</h2>
 	</div>
 	<div>
-		<form method="post">
-			<div class="input-group">
-				<label>Student ID</label>
-				<input type="text" name="id">
+		<form method="post" class="form-horizontal" role="form">
+			<div class="form-group">
+				<label for="id" class="control-label">Student ID</label>
+				<input type="text" name="id" id="id" class="form-control input-sm" required>
 			</div>
-			<div class="input-group">
-				<label>Last Name</label>
-				<input type="text" name="ln">
+
+			<div class="form-group">
+				<label for="ln" class="control-label">Last Name</label>
+				<input type="text" name="ln" id="ln" class="form-control input-sm" required>
 			</div>
-			<div class="input-group">
-				<label>First Name</label>
-				<input type="text" name="fn">
+
+			<div class="form-group">
+				<label for="fn" class="control-label">First Name</label>
+				<input type="text" name="fn" id="fn" class="form-control input-sm" required>
 			</div>
-			<div class="input-group">
-				<label>Middle Name</label>
-				<input type="text" name="mn">
+
+			<div class="form-group">
+				<label for="mn" class="control-label">Middle Name</label>
+				<input type="text" name="mn" id="mn" class="form-control input-sm">
 			</div>
-			<div class="input-group">
-				<label>Course</label>
-				<select name="cors">
+
+			<div class="form-group">
+				<label for="cors" class="control-label">Course</label>
+				<select name="cors" id="cors" class="form-control input-sm" required>
 					<?php
 					// Example: classic SQL query (adjust table & field names to match yours)
 					$query = "SELECT course_code, course_name FROM courses ORDER BY course_name ASC";
@@ -82,8 +109,8 @@ if (isset($_GET['out'])) {
 					if ($result && mysqli_num_rows($result) > 0):
 						while ($course = mysqli_fetch_assoc($result)):
 					?>
-							<option value="<?php echo $course['course_code']; ?>">
-								<?php echo $course['course_name']; ?>
+							<option value="<?php echo htmlspecialchars($course['course_code']); ?>">
+								<?php echo htmlspecialchars($course['course_name']); ?>
 							</option>
 					<?php
 						endwhile;
@@ -91,44 +118,24 @@ if (isset($_GET['out'])) {
 					?>
 				</select>
 			</div>
-			<div class="input-group">
-				<button type="submit" class="btn" name="addbtn">Add</button>
+
+			<div class="form-group text-center">
+				<button type="submit" class="btn btn-success btn-sm" name="addbtn">
+					<span class="glyphicon glyphicon-plus"></span> Add
+				</button>
+				<a href="masterhome.php?list" class="btn btn-default btn-sm" style="margin-left: 10px;">
+					<span class="glyphicon glyphicon-arrow-left"></span> Back
+				</a>
 			</div>
-			<a href="masterhome.php?list">Back</a>
-			<div class="error_msg">
-				<?php
-				if (isset($_GET['addfailed'])) {
-					die("This student already added!");
-				}
-				?>
+
+			<div class="form-group text-center">
+				<?php if (isset($_GET['addfailed'])): ?>
+					<div class="alert alert-danger" style="display: inline-block;">
+						This student already added!
+					</div>
+				<?php endif; ?>
 			</div>
 		</form>
-
-		<?php
-
-		if (isset($_POST['addbtn'])) {
-			$sid = $_POST['id'];
-			$ln = strtoupper($_POST['ln']);
-			$fn = strtoupper($_POST['fn']);
-			$mn = strtoupper($_POST['mn']);
-			$cors = $_POST['cors'];
-
-
-			$query = "SELECT * FROM `student_list` WHERE student_ID = '$sid'";
-
-			$result1 = mysqli_query($con, $query) or die(mysqli_error($con));
-
-			if (mysqli_num_rows($result1) > 0) {
-				header("location: addstudent.php?addfailed");
-			} else {
-
-				$sql = "INSERT INTO `student_list` (student_ID, lastname, firstname, middlename, course, visibility)
-				VALUES ('$sid', '$ln', '$fn', '$mn', '$cors', '1')";
-				$qry = mysqli_query($con, $sql);
-				header("location: masterhome.php?list");
-			}
-		}
-		?>
 
 </body>
 

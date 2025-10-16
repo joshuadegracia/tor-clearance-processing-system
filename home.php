@@ -78,45 +78,40 @@ while ($rows = mysqli_fetch_array($row)) {
 	?>
 
 	<center>
-		<table>
-			<caption style="margin-top: 20px;">Homepage</caption>
-			<tr>
-				<td>
-
-					<form method='post'>
-
-						<div class='input-group'>
-							<label style='font-size: 20pt; text-align: center'>
-								St. Paul College Foundation Transcript Of Records Request System
-							</label>
-							<div class="error_msg" style="font-family: arial; color: red; font-size: 12px; text-align: center; font-weight: bold;">
-								<?php
-								if (isset($_GET['success'])) {
-									die("<label style='font-size: 17pt; color: blue; text-align: center'> Thank you for using our system! :) </label><br><br> Your request has been received. Just wait the SMS notification.");
-								}
-								?>
-							</div>
-							<label style='font-size: 15pt; color: blue; margin-top: 20px'>
-								<img src="./img/bg6.jpg" height="100%" width="100%">
-							</label><br>
-
-
-							<label style='font-size: 10pt; color: dimgray; margin-top: 30px; text-align: center'>
-								Click the button below if you want to request again.
-							</label><br>
-							<label style='font-size: 10pt; color: tomato; text-align: center;'>
-								You have 12 attempts to request.
-							</label>
+	<table border=1>
+		<caption style="margin-top: 20px;">Homepage</caption>
+		<tr>
+			<td>
+				<form method='post'>
+					<div>
+						<label>
+							<h3>St. Paul College Foundation Transcript Of Records Request System</h3>
+						</label>
+						<div class="error_msg" style="font-family: arial; color: red; font-size: 12px; text-align: center; font-weight: bold;">
+							<?php
+							if (isset($_GET['success'])) {
+								die("<label style='font-size: 17pt; color: blue; text-align: center'> Thank you for using our system! :) </label><br><br> Your request has been received. Just wait the SMS notification.");
+							}
+							?>
 						</div>
-						<center>
-							<button id="my_button" name="again" style="background-color: #4CAF50; color: white; font-family: verdana; font-weight: bold; border: none; border-radius: 3px 3px 3px 3px; height: 40px; width: 150px; margin-top:">Request Again</button>
-						</center>
+						<label style='font-size: 15pt; color: blue; margin-top: 20px'>
+							<img src="<?php echo site_url('img/bg6.jpg'); ?>" height="100%" width="100%">
+						</label><br>
 
-					</form>
-				</td>
-			</tr>
-		</table>
+						<label style='font-size: 10pt; color: dimgray; margin-top: 30px; text-align: center'>
+							Click the button below if you want to request again.
+						</label><br>
+						<label style='font-size: 10pt; color: tomato; text-align: center;'>
+							You have 12 attempts to request.
+						</label>
+					</div>
+					<button class="btn btn-success" id="my_button" name="again">Request Again</button>
+				</form>
+			</td>
+		</tr>
+	</table>
 	</center>
+
 
 	<?php
 	if (isset($_POST['again'])) {

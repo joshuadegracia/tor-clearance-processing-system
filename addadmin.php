@@ -55,66 +55,80 @@ if (isset($_GET['out'])) {
 	</div>
 	<div>
 		<form method="post">
-			<div class="input-group">
-				<label>Admin ID</label>
-				<input type="number" name="aid" required>
+			<div class="form-group">
+				<label for="aid">Admin ID</label>
+				<input type="number" class="form-control" id="aid" name="aid" required>
 			</div>
-			<div class="input-group">
-				<label>Last Name</label>
-				<input type="text" name="last" required>
+
+			<div class="form-group">
+				<label for="last">Last Name</label>
+				<input type="text" class="form-control" id="last" name="last" required>
 			</div>
-			<div class="input-group">
-				<label>First Name</label>
-				<input type="text" name="first" required>
+
+			<div class="form-group">
+				<label for="first">First Name</label>
+				<input type="text" class="form-control" id="first" name="first" required>
 			</div>
-			<div class="input-group">
-				<label>Middle Name</label>
-				<input type="text" name="mid">
+
+			<div class="form-group">
+				<label for="mid">Middle Name</label>
+				<input type="text" class="form-control" id="mid" name="mid">
 			</div>
-			<div class="input-group">
-				<label>Department</label>
-				<select name="dep" required>
+
+			<div class="form-group">
+				<label for="dep">Department</label>
+				<select class="form-control" id="dep" name="dep" required>
 					<option value="Program Chair Department">Program Chair Department</option>
 					<option value="Library">Library</option>
 					<option value="SPS/Guidance">SPS/Guidance</option>
 					<option value="Finance">Finance</option>
 				</select>
 			</div>
-			<div class="input-group">
-				<label>Role</label>
-				<select name="role" required>
+
+			<div class="form-group">
+				<label for="role">Role</label>
+				<select class="form-control" id="role" name="role" required>
 					<option value="Property Custodian">Property Custodian</option>
 					<option value="Librarian">Librarian</option>
 					<option value="Guidance Councilor">Guidance Councilor</option>
 					<option value="Finance Officer">Finance Officer</option>
 				</select>
 			</div>
-			<div class="input-group">
-				<label>Password</label>
-				<input type="password" name="pass" required>
-			</div>
-			<div class="input-group">
-				<label>Confirm Password</label>
-				<input type="password" name="pass2" required>
+
+			<div class="form-group">
+				<label for="pass">Password</label>
+				<input type="password" class="form-control" id="pass" name="pass" required>
 			</div>
 
-			<div class="input-group">
-				<button type="submit" class="btn" name="regbtn" style="color: bisque">Add</button>
+			<div class="form-group">
+				<label for="pass2">Confirm Password</label>
+				<input type="password" class="form-control" id="pass2" name="pass2" required>
 			</div>
-			<a href="<?php echo site_url('masterhome.php?dep'); ?>">Back</a>
-			<div class="error_msg">
+
+			<div class="form-group text-center">
+				<button type="submit" class="btn btn-success" name="regbtn" style="background-color:#158A43; color:bisque;">
+					Add
+				</button>
+			</div>
+
+			<div class="text-center" style="margin-bottom:10px;">
+				<a href="<?php echo site_url('masterhome.php?dep'); ?>">Back</a>
+			</div>
+
+			<div class="error_msg text-center" style="margin-top:10px; color:red;">
 				<?php
 				if (isset($_GET['failed'])) {
-					die("The two password do not match!");
+					echo "The two password do not match!";
 				}
 				if (isset($_GET['success'])) {
-					die("Successfully Added!");
+					echo "<span style='color:green;'>Successfully Added!</span>";
 				}
 				if (isset($_GET['exist'])) {
-					die("Already have an account!");
+					echo "Already have an account!";
 				}
 				?>
 			</div>
+		</form>
 	</div>
 
 	<?php
