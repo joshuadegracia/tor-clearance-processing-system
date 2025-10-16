@@ -1,0 +1,1 @@
+SELECT a.*, b.* FROM accounts a inner JOIN admin b on b.admin_ID = a.admin_ID;
